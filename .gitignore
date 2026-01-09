@@ -1,4 +1,12 @@
 # =========================
+# React Router
+# =========================
+/app/node_modules/
+/app/.react-router/
+/app/build/
+
+
+# =========================
 # .NET build outputs
 # =========================
 bin/
@@ -18,10 +26,6 @@ out/
 # =========================
 .vs/
 .vscode/
-
-# Rider / JetBrains
-.idea/
-*.sln.iml
 
 # =========================
 # ASP.NET Core
@@ -44,5 +48,3 @@ logs/
 # =========================
 .DS_Store
 Thumbs.db
-
-# ======
