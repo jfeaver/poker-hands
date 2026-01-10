@@ -1,7 +1,55 @@
 import { useState } from "react";
 
+enum Suit {
+  Diamonds = "D",
+  Clubs = "C",
+  Hearts = "H",
+  Spades = "S",
+}
+
+enum Rank {
+  Two = "2",
+  Three = "3",
+  Four = "4",
+  Five = "5",
+  Six = "6",
+  Seven = "7",
+  Eight = "8",
+  Nine = "9",
+  Ten = "10",
+  Jack = "J",
+  Queen = "Q",
+  King = "K",
+  Ace = "A",
+}
+
+enum HandTitle {
+  HighCard = "High Card",
+  Pair = "Pair",
+  TwoPair = "Two Pairs",
+  Trio = "Three of a Kind",
+  Straight = "Straight",
+  Flush = "Flush",
+  FullHouse = "Full House",
+  Quads = "Four of a Kind",
+  StraightFlush = "Straight Flush",
+}
+
+interface Card {
+  rank: Rank;
+  suit: Suit;
+}
+
+interface PokerHand {
+  playerId: string;
+  hand: Array<Card>;
+  title?: HandTitle;
+  scoringCards?: Array<Card>;
+}
+
 export function Welcome() {
-  const [message, setMessage] = useState("");
+  const [pokerHands, setPokerHands] = useState<Array<PokerHand>>([]);
+  const [winningHand, setWinningHand] = useState<PokerHand>();
 
   const handlePost = async () => {
     try {
@@ -18,7 +66,8 @@ export function Welcome() {
       }
 
       const data = await response.json();
-      setMessage("Post successful!");
+      // TODO: Double check: The instructions said that output could be assumed to be well formed?
+      setWinningHand(data);
       // Handle success (e.g., redirect using useNavigate if needed)
     } catch (error) {
       if (error instanceof Error) {
@@ -44,9 +93,9 @@ export function Welcome() {
             disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handlePost}
         >
-          Send POST Request
+          Who gets the pot?
         </button>
-        <p>{message}</p>
+        {winningHand ? <p>{JSON.stringify(winningHand)}</p> : <></>}
       </div>
     </main>
   );

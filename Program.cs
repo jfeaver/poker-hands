@@ -52,7 +52,13 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapPost("/hand_comparisons", () =>
 {
-
+    return new PotWinner
+        (
+            "Lewis",
+            "High Card",
+            [new Card("2", "C"), new Card("3", "H"), new Card("4", "S"), new Card("8", "C"), new Card("A", "H")],
+            [new Card("A", "H")]
+        );
 })
 .WithName("CreateHandComparison");
 
@@ -62,3 +68,7 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
+// TODO: use enum for title, rank, suit
+record PotWinner(string PlayerId, string Title, Card[] Hand, Card[] ScoringCards) { }
+record Card(string rank, string suit) { }
