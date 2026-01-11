@@ -1,50 +1,86 @@
 import { useState } from "react";
 
 enum Suit {
-  Diamonds = "D",
-  Clubs = "C",
-  Hearts = "H",
-  Spades = "S",
+  Diamonds = "Diamonds",
+  Clubs = "Clubs",
+  Hearts = "Hearts",
+  Spades = "Spades",
 }
 
 enum Rank {
-  Two = "2",
-  Three = "3",
-  Four = "4",
-  Five = "5",
-  Six = "6",
-  Seven = "7",
-  Eight = "8",
-  Nine = "9",
-  Ten = "10",
-  Jack = "J",
-  Queen = "Q",
-  King = "K",
-  Ace = "A",
+  Two = "Two",
+  Three = "Three",
+  Four = "Four",
+  Five = "Five",
+  Six = "Six",
+  Seven = "Seven",
+  Eight = "Eight",
+  Nine = "Nine",
+  Ten = "Ten",
+  Jack = "Jack",
+  Queen = "Queen",
+  King = "King",
+  Ace = "Ace",
 }
 
 enum HandTitle {
-  HighCard = "High Card",
+  HighCard = "HighCard",
   Pair = "Pair",
-  TwoPair = "Two Pairs",
-  Trio = "Three of a Kind",
+  TwoPair = "TwoPair",
+  Trips = "Trips",
   Straight = "Straight",
   Flush = "Flush",
-  FullHouse = "Full House",
-  Quads = "Four of a Kind",
-  StraightFlush = "Straight Flush",
+  FullHouse = "FullHouse",
+  Quads = "Quads",
+  StraightFlush = "StraightFlush",
 }
 
 interface Card {
-  rank: Rank;
-  suit: Suit;
+  Rank: Rank;
+  Suit: Suit;
 }
 
 interface PokerHand {
-  playerId: string;
-  hand: Array<Card>;
-  title?: HandTitle;
-  scoringCards?: Array<Card>;
+  PlayerId: string;
+  Hand: Array<Card>;
+  Title?: HandTitle;
+  ScoringCards?: Array<Card>;
+}
+
+function handTitle(hand: PokerHand) {
+  switch (hand.Title) {
+    case HandTitle.HighCard:
+      return "a high card";
+    case HandTitle.Pair:
+      return "one pair";
+    case HandTitle.TwoPair:
+      return "two pairs";
+    case HandTitle.Trips:
+      return "three of a kind";
+    case HandTitle.Straight:
+      return "a straight";
+    case HandTitle.Flush:
+      return "a flush";
+    case HandTitle.FullHouse:
+      return "a full house";
+    case HandTitle.Quads:
+      return "four of a kind";
+    case HandTitle.StraightFlush:
+      return "a straight flush";
+  }
+}
+
+function WinningHand({ hand }: { hand: PokerHand }) {
+  console.log({ hand });
+  return (
+    <div>
+      <h3>{hand.PlayerId} Wins!</h3>
+      <p>
+        {hand.PlayerId} wins with {handTitle(hand)}:{" "}
+        {JSON.stringify(hand.ScoringCards)}
+      </p>
+    </div>
+  );
 }
 
 export function Welcome() {
@@ -58,7 +94,7 @@ export function Welcome() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ key: "value" }),
+        body: JSON.stringify(pokerHands),
       });
 
       if (!response.ok) {
@@ -78,6 +114,31 @@ export function Welcome() {
     }
   };
 
+  const tedVsLouis = () => {
+    setPokerHands([
+      {
+        PlayerId: "Ted",
+        Hand: [
+          { Rank: Rank.Two, Suit: Suit.Hearts },
+          { Rank: Rank.Three, Suit: Suit.Diamonds },
+          { Rank: Rank.Five, Suit: Suit.Spades },
+          { Rank: Rank.Nine, Suit: Suit.Clubs },
+          { Rank: Rank.King, Suit: Suit.Diamonds },
+        ],
+      },
+      {
+        PlayerId: "Louis",
+        Hand: [
+          { Rank: Rank.Two, Suit: Suit.Clubs },
+          { Rank: Rank.Three, Suit: Suit.Hearts },
+          { Rank: Rank.Four, Suit: Suit.Spades },
+          { Rank: Rank.Eight, Suit: Suit.Clubs },
+          { Rank: Rank.Ace, Suit: Suit.Hearts },
+        ],
+      },
+    ]);
+  };
+
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
@@ -91,11 +152,26 @@ export function Welcome() {
             cursor-pointer hover:bg-slate-800
             active:bg-slate-700
             disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={tedVsLouis}
+        >
+          Ted vs Louis
+        </button>
+        <button
+          className="
+            inline-flex items-center justify-center
+            rounded-md bg-slate-900
+            px-4 py-2
+            text-sm font-medium text-white
+            shadow
+            cursor-pointer hover:bg-slate-800
+            active:bg-slate-700
+            disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={pokerHands.length ? undefined : true}
           onClick={handlePost}
         >
           Who gets the pot?
         </button>
-        {winningHand ? <p>{JSON.stringify(winningHand)}</p> : <></>}
+        {winningHand ? <WinningHand hand={winningHand} /> : <></>}
       </div>
     </main>
   );

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +18,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddHttpLogging(logging =>
 {
     logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
+});
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter()
+    );
 });
 
 
@@ -52,13 +60,19 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapPost("/hand_comparisons", () =>
 {
-    return new PotWinner
-        (
-            "Lewis",
-            "High Card",
-            [new Card("2", "C"), new Card("3", "H"), new Card("4", "S"), new Card("8", "C"), new Card("A", "H")],
-            [new Card("A", "H")]
-        );
+    return Results.Json(
+        new PotWinner
+            (
+                "Louis",
+                HandTitle.HighCard,
+                [new Card(Rank.Two, Suit.Clubs), new Card(Rank.Three, Suit.Hearts), new Card(Rank.Four, Suit.Spades), new Card(Rank.Eight, Suit.Clubs), new Card(Rank.Ace, Suit.Hearts)],
+                [new Card(Rank.Ace, Suit.Hearts)]
+            ),
+        new System.Text.Json.JsonSerializerOptions
+        {
+            Converters = { new JsonStringEnumConverter() }
+        }
+    );
 })
 .WithName("CreateHandComparison");
 
@@ -69,6 +83,43 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
 
-// TODO: use enum for title, rank, suit
-record PotWinner(string PlayerId, string Title, Card[] Hand, Card[] ScoringCards) { }
-record Card(string rank, string suit) { }
+public enum HandTitle
+{
+    HighCard,
+    Pair,
+    TwoPair,
+    Trips,
+    Straight,
+    Flush,
+    FullHouse,
+    Quads,
+    StraightFlush
+}
+
+public enum Rank
+{
+    Two,
+    Three,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
+    Jack,
+    Queen,
+    King,
+    Ace
+}
+
+public enum Suit
+{
+    Clubs,
+    Diamonds,
+    Hearts,
+    Spades
+}
+
+record PotWinner(string PlayerId, HandTitle Title, Card[] Hand, Card[] ScoringCards) { }
+record Card(Rank Rank, Suit Suit) { }
