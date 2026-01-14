@@ -11,7 +11,7 @@ accepts and responds with JSON.
 ## Get Started
 
 - Install dotnet.
-- Run `dotnet run` in the project directory.
+- Restore .NET dependencies and run the backend server with `dotnet run` in the project directory.
 - Install node version 20+. I'm using `mise` to manage my Node version in
   [/app/mise.toml](app/mise.toml).
 - Install the front end dependencies:
