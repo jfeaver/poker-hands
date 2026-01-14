@@ -2,6 +2,35 @@
   "version": 3,
   "targets": {
     "net10.0": {
+      "CasinoSuite.Poker/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "DeckOfPlayingCards": "1.1.1"
+        },
+        "compile": {
+          "lib/net7.0/PokerLibrary.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/PokerLibrary.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "DeckOfPlayingCards/1.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/DeckOfCardsLibrary.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/DeckOfCardsLibrary.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.OpenApi/10.0.1": {
         "type": "package",
         "dependencies": {
@@ -40,6 +69,34 @@
     }
   },
   "libraries": {
+    "CasinoSuite.Poker/1.0.0": {
+      "sha512": "DQnisNez7qJzF1MNf/zeIWdzPkP1DxxRkNR9mc7NO8A3waPH/x93m8EAUPgQu1HCqZe/3Kp72Jr2hROsTMsNvA==",
+      "type": "package",
+      "path": "casinosuite.poker/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "casinosuite.poker.1.0.0.nupkg.sha512",
+        "casinosuite.poker.nuspec",
+        "lib/net7.0/PokerLibrary.dll",
+        "lib/net7.0/PokerLibrary.xml"
+      ]
+    },
+    "DeckOfPlayingCards/1.1.1": {
+      "sha512": "lSA8agM3SkbhpuSMZ8r/yCijoNE5qIc8p4QsqrwbAuaslObj8+Q71RALTjPA+p2AcA2F2hTZLTn0qVEmhUg+8A==",
+      "type": "package",
+      "path": "deckofplayingcards/1.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "deckofplayingcards.1.1.1.nupkg.sha512",
+        "deckofplayingcards.nuspec",
+        "lib/net7.0/DeckOfCardsLibrary.dll",
+        "lib/net7.0/DeckOfCardsLibrary.xml"
+      ]
+    },
     "Microsoft.AspNetCore.OpenApi/10.0.1": {
       "sha512": "gMY53EggRIFawhue66GanHcm1Tcd0+QzzMwnMl60LrEoJhGgzA9qAbLx6t/ON3hX4flc2NcEbTK1Z5GCLYHcwA==",
       "type": "package",
@@ -79,6 +136,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "CasinoSuite.Poker >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 10.0.1"
     ]
   },
@@ -125,6 +183,10 @@
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
+          "CasinoSuite.Poker": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[10.0.1, )"

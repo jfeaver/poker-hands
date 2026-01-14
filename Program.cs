@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using DeckOfCardsLibrary;
+using PokerLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,19 +62,6 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapPost("/hand_comparisons", (PlayerHand[] players) =>
 {
-    // return Results.Json(
-    //     new PotWinner
-    //         (
-    //             "Louis",
-    //             HandTitle.HighCard,
-    //             [new Card(Rank.Two, Suit.Clubs), new Card(Rank.Three, Suit.Hearts), new Card(Rank.Four, Suit.Spades), new Card(Rank.Eight, Suit.Clubs), new Card(Rank.Ace, Suit.Hearts)],
-    //             [new Card(Rank.Ace, Suit.Hearts)]
-    //         ),
-    //     new System.Text.Json.JsonSerializerOptions
-    //     {
-    //         Converters = { new JsonStringEnumConverter() }
-    //     }
-    // );
     if (players is null || players.Length == 0)
     {
         return Results.BadRequest("At least one player is required.");
@@ -80,13 +69,13 @@ app.MapPost("/hand_comparisons", (PlayerHand[] players) =>
 
     // Reduce players into a winner:
     var winningPlayer = players[0];
-    var winningHand = HandEvaluator.Evaluate(winningPlayer.Hand);
+    var winningHand = PokerHand.getBestHand(winningPlayer.Hand);
 
     for (int i = 1; i < players.Length; i++)
     {
-        var currentHand = HandEvaluator.Evaluate(players[i].Hand);
+        var currentHand = PokerHand.getBestHand(players[i].Hand);
 
-        if (currentHand.CompareTo(winningHand) > 0)
+        if (currentHand.winsAgainst(winningHand) ?? false)
         {
             winningHand = currentHand;
             winningPlayer = players[i];
@@ -97,9 +86,8 @@ app.MapPost("/hand_comparisons", (PlayerHand[] players) =>
         new PotWinner
             (
                 winningPlayer.PlayerId,
-                winningHand.HandRank,
-                winningPlayer.Hand,
-                winningHand.ScoringCards
+                winningHand.handRank,
+                winningPlayer.Hand
             )
     );
 })
@@ -112,149 +100,9 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
 
-public enum HandTitle
-{
-    HighCard,
-    Pair,
-    TwoPair,
-    Trips,
-    Straight,
-    Flush,
-    FullHouse,
-    Quads,
-    StraightFlush
-}
-
-public enum Rank
-{
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
-    Ten,
-    Jack,
-    Queen,
-    King,
-    Ace
-}
-
-public enum Suit
-{
-    Clubs,
-    Diamonds,
-    Hearts,
-    Spades
-}
-
-record PotWinner(string PlayerId, HandTitle Title, Card[] Hand, Card[] ScoringCards) { }
-record Card(Rank Rank, Suit Suit) { }
+record PotWinner(string PlayerId, PokerHand.HandRank Title, Card[] Hand) { }
 
 record PlayerHand(
     string PlayerId,
     Card[] Hand
 );
-
-sealed record EvaluatedHand(
-    HandTitle HandRank,
-    Card[] ScoringCards
-) : IComparable<EvaluatedHand>
-{
-    public int CompareTo(EvaluatedHand? other)
-    {
-        if (other is null)
-        {
-            return 1;
-        }
-
-        var categoryComparison = HandRank.CompareTo(other.HandRank);
-        if (categoryComparison != 0)
-        {
-            return categoryComparison;
-        }
-
-        // In case two hands are of the same type.
-        for (int i = 0; i < ScoringCards.Count(); i++)
-        {
-            var cmp = ScoringCards[i].Rank.CompareTo(other.ScoringCards[i].Rank);
-            if (cmp != 0)
-            {
-                return cmp;
-            }
-        }
-
-        return 0;
-    }
-}
-
-///////////////// HAND EVALUATION /////////////////
-
-
-sealed record HandAnalysis(
-    bool IsFlush,
-    bool IsStraight,
-    List<List<Card>> Sets
-);
-
-
-
-
-static class HandEvaluator
-{
-    public static EvaluatedHand Evaluate(Card[] cards)
-    {
-        // sort ranks descending once
-        // detect flush / straight / groups
-        // return EvaluatedHand(...)
-        throw new NotImplementedException();
-    }
-
-    static HandAnalysis AnalyzeSortedCards(Card[] sorted)
-    {
-        bool isFlush = true;
-        bool isStraight = true;
-
-        var sets = new List<List<Card>>();
-        var currentSet = new List<Card> { sorted[0] };
-
-        for (int i = 1; i < sorted.Length; i++)
-        {
-            var previous = sorted[i - 1];
-            var current = sorted[i];
-
-            // Flush check
-            if (current.Suit != sorted[0].Suit)
-            {
-                isFlush = false;
-            }
-
-            // Straight check (basic, Ace-low handled later)
-            if (previous.Rank - 1 != current.Rank)
-            {
-                isStraight = false;
-            }
-
-            // Grouping by rank
-            if (current.Rank == previous.Rank)
-            {
-                currentSet.Add(current);
-            }
-            else
-            {
-                sets.Add(currentSet);
-                currentSet = new List<Card> { current };
-            }
-        }
-
-        sets.Add(currentSet);
-
-        return new HandAnalysis(
-            isFlush,
-            isStraight,
-            sets
-        );
-    }
-}

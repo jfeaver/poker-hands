@@ -36,19 +36,18 @@ enum HandTitle {
 }
 
 interface Card {
-  Rank: Rank;
-  Suit: Suit;
+  rank: Rank;
+  suit: Suit;
 }
 
 interface PokerHand {
-  PlayerId: string;
-  Hand: Array<Card>;
-  Title?: HandTitle;
-  ScoringCards?: Array<Card>;
+  playerId: string;
+  hand: Array<Card>;
+  title?: HandTitle;
 }
 
 function handTitle(hand: PokerHand) {
-  switch (hand.Title) {
+  switch (hand.title) {
     case HandTitle.HighCard:
       return "a high card";
     case HandTitle.Pair:
@@ -74,10 +73,9 @@ function WinningHand({ hand }: { hand: PokerHand }) {
   console.log({ hand });
   return (
     <div>
-      <h3>{hand.PlayerId} Wins!</h3>
+      <h3>{hand.playerId} Wins!</h3>
       <p>
-        {hand.PlayerId} wins with {handTitle(hand)}:{" "}
-        {JSON.stringify(hand.ScoringCards)}
+        {hand.playerId} wins with {handTitle(hand)}.
       </p>
     </div>
   );
@@ -117,23 +115,23 @@ export function Welcome() {
   const tedVsLouis = () => {
     setPokerHands([
       {
-        PlayerId: "Ted",
-        Hand: [
-          { Rank: Rank.Two, Suit: Suit.Hearts },
-          { Rank: Rank.Three, Suit: Suit.Diamonds },
-          { Rank: Rank.Five, Suit: Suit.Spades },
-          { Rank: Rank.Nine, Suit: Suit.Clubs },
-          { Rank: Rank.King, Suit: Suit.Diamonds },
+        playerId: "Ted",
+        hand: [
+          { rank: Rank.Two, suit: Suit.Hearts },
+          { rank: Rank.Three, suit: Suit.Diamonds },
+          { rank: Rank.Five, suit: Suit.Spades },
+          { rank: Rank.Nine, suit: Suit.Clubs },
+          { rank: Rank.King, suit: Suit.Diamonds },
         ],
       },
       {
-        PlayerId: "Louis",
-        Hand: [
-          { Rank: Rank.Two, Suit: Suit.Clubs },
-          { Rank: Rank.Three, Suit: Suit.Hearts },
-          { Rank: Rank.Four, Suit: Suit.Spades },
-          { Rank: Rank.Eight, Suit: Suit.Clubs },
-          { Rank: Rank.Ace, Suit: Suit.Hearts },
+        playerId: "Louis",
+        hand: [
+          { rank: Rank.Two, suit: Suit.Clubs },
+          { rank: Rank.Three, suit: Suit.Hearts },
+          { rank: Rank.Four, suit: Suit.Spades },
+          { rank: Rank.Eight, suit: Suit.Clubs },
+          { rank: Rank.Ace, suit: Suit.Hearts },
         ],
       },
     ]);
