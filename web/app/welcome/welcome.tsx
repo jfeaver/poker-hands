@@ -168,6 +168,7 @@ function PlayerHandEditor({
     >
       <h4 className="font-semibold">
         <input
+          className="text-center"
           type="text"
           value={hand.playerId}
           onChange={updatePlayerId}
