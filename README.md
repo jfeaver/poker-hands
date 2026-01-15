@@ -13,12 +13,12 @@ accepts and responds with JSON.
 - Install dotnet.
 - Restore .NET dependencies and run the backend server with `dotnet run` in the project directory.
 - Install node version 20+. I'm using `mise` to manage my Node version in
-  [/app/mise.toml](app/mise.toml).
+  [/web/mise.toml](web/mise.toml).
 - Install the front end dependencies:
 
 ```bash
-cd app
+cd web
 npm install
 ```
 
-- Start the frontend server with `npm run dev` in the `/app` directory.
+- Start the frontend server with `npm run dev` in the `/web` directory.

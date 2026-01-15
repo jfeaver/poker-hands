@@ -1,9 +1,9 @@
 # =========================
 # React Router
 # =========================
-/app/node_modules/
-/app/.react-router/
-/app/build/
+/web/node_modules/
+/web/.react-router/
+/web/build/
 
 
 # =========================

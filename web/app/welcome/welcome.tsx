@@ -162,7 +162,8 @@ function PlayerHandEditor({
   return (
     <div
       className={
-        "flex flex-col items-center gap-2" + (isWinner ? " bg-amber-200" : "")
+        "flex flex-col items-center gap-2 p-4" +
+        (isWinner ? " bg-amber-200" : "")
       }
     >
       <h4 className="font-semibold">
@@ -197,8 +198,32 @@ function WinningHand({ hand }: { hand: PokerHand }) {
   );
 }
 
+const initialPokerHands = [
+  {
+    playerId: "Ted",
+    hand: [
+      { rank: Rank.Two, suit: Suit.Hearts },
+      { rank: Rank.Three, suit: Suit.Diamonds },
+      { rank: Rank.Five, suit: Suit.Spades },
+      { rank: Rank.Nine, suit: Suit.Clubs },
+      { rank: Rank.King, suit: Suit.Diamonds },
+    ],
+  },
+  {
+    playerId: "Louis",
+    hand: [
+      { rank: Rank.Two, suit: Suit.Clubs },
+      { rank: Rank.Three, suit: Suit.Hearts },
+      { rank: Rank.Four, suit: Suit.Spades },
+      { rank: Rank.Eight, suit: Suit.Clubs },
+      { rank: Rank.Ace, suit: Suit.Hearts },
+    ],
+  },
+];
+
 export function Welcome() {
-  const [pokerHands, setPokerHands_] = useState<Array<PokerHand>>([]);
+  const [pokerHands, setPokerHands_] =
+    useState<Array<PokerHand>>(initialPokerHands);
   const [winningHand, setWinningHand] = useState<PokerHand>();
 
   const setPokerHands: React.Dispatch<
@@ -234,28 +259,7 @@ export function Welcome() {
   };
 
   const tedVsLouis = () => {
-    setPokerHands([
-      {
-        playerId: "Ted",
-        hand: [
-          { rank: Rank.Two, suit: Suit.Hearts },
-          { rank: Rank.Three, suit: Suit.Diamonds },
-          { rank: Rank.Five, suit: Suit.Spades },
-          { rank: Rank.Nine, suit: Suit.Clubs },
-          { rank: Rank.King, suit: Suit.Diamonds },
-        ],
-      },
-      {
-        playerId: "Louis",
-        hand: [
-          { rank: Rank.Two, suit: Suit.Clubs },
-          { rank: Rank.Three, suit: Suit.Hearts },
-          { rank: Rank.Four, suit: Suit.Spades },
-          { rank: Rank.Eight, suit: Suit.Clubs },
-          { rank: Rank.Ace, suit: Suit.Hearts },
-        ],
-      },
-    ]);
+    setPokerHands(initialPokerHands);
   };
 
   const blackVsWhite = () => {
